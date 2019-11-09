@@ -46,9 +46,6 @@ let data = [
           "height2": 62.21567001967418
         },
       ]
-/*
-*/
-
 
 function resizerHover() {
     let el = d3.select(this),
@@ -166,86 +163,7 @@ function rectMoveStart(d) {
     d.y2 = d.y
     d.width2 = d.width
     d.height2 = d.height
-    console.log('start ' + JSON.stringify( d , null, 2 ))
 }
-/*
-function rectMoving(d) {
-
-    let dragX = Math.max(
-        Math.min(d3.event.x, MAX_TRANSLATE_X - d.width),
-        MIN_TRANSLATE_X
-    )
-
-    let dragY = Math.max(
-        Math.min(d3.event.y, MAX_TRANSLATE_Y - d.height),
-        MIN_TRANSLATE_Y
-    )
-
-    d.x = dragX
-    d.y = dragY
-
-    factory.render()
-}
-*/
-
-
-function bisectNorthSouth(boxes, item) {
-    // target x1 and x2
-    const tX1 = item.x
-    const tX2 = this.relativeXtoAbsX(item)
-    // collect them up
-    let hits = {}
-    // roll through and look
-    boxes.forEach((box) => {
-        if (item.id !== box.id) {
-            const x1 = box.x
-            const x2 = this.relativeXtoAbsX(box)
-
-            if ((x1 > tX1) && (x2 > tX1)) {
-                // Too far to the left
-                // console.log( 'ns _LEFT\t', x1, '\ttX1\t', tX1, ' x2\t', x2, ' tX2\t', tX2, box.label ) 
-
-            } else if ((x1 < tX2) && (x2 < tX2)) {
-                // console.log( 'ns RIGHT\t', x1, '\ttX1\t', tX1, ' x2\t', x2, ' tX2\t', tX2, box.label ) 
-                // Too far to the right 
-            } else {
-                // console.log( 'ns ___OK\t', x1, '\ttX1\t', tX1, ' x2\t', x2, ' tX2\t', tX2, box.label ) 
-                hits[box.id] = box.label
-            }
-        }
-    })
-    // return [] of the ids of the boxes 
-    return Object.keys(hits)
-}
-
-
-function bisectEastWest(boxes, item) {
-    // target y1 and y2
-    const tY1 = item.y
-    const tY2 = this.relativeYtoAbsY(item)
-    // collect them up
-    let hits = {}
-    // roll through and look
-    boxes.forEach((box) => {
-        if (item.id !== box.id) {
-            const y1 = box.y
-            const y2 = this.relativeYtoAbsY(box)
-
-            if ((y1 < tY1) && (y2 < tY1)) {
-                // console.log( 'ew ABOVE\t', y1, '\ttY1\t', tY1, ' y2\t', y2, ' tY2\t', tY2, box.label ) 
-            } else if ((y1 > tY2) && (y2 > tY2)) {
-                // console.log( 'ew UNDER\t', y1, '\ttY1\t', tY1, ' y2\t', y2, ' tY2\t', tY2, box.label ) 
-            } else {
-                // console.log( 'ew ___OK\t', y1, '\ttY1\t', tY1, ' y2\t', y2, ' tY2\t', tY2, box.label ) 
-                hits[box.id] = box.label
-            }
-        }
-    })
-    // return [] of the ids of the boxes 
-    return Object.keys(hits)
-}
-
-/////// /////////// //////// 
 
 class Factory {
     constructor() {
@@ -280,15 +198,27 @@ class Factory {
             height2: height
         })
         factory.render()
+
+
+
     }
     
+    show() {
+        console.log( JSON.stringify(data))
+    }
+
     remove() {
         if ( data.length > 0 ) {
             const killed = data.pop()
             factory.render()
         }
     }
+    test() {
+        data = [{"id":0,"x":397.325863714925,"y":289.3064471837431,"width":265.04077446866876,"height":157.42689021860065,"x2":397.325863714925,"y2":289.3064471837431,"width2":106.23724699872507,"height2":75.40303155579356},{"id":1,"x":771.990689877467,"y":185.81302606981112,"width":121.83063630676082,"height":37.1594970733531,"x2":619.990689877467,"y2":87.81301844041658,"width2":121.83063630676082,"height2":37.1594970733531},{"id":2,"x":109.94862797023686,"y":324.9400673674784,"width":53.86475208853567,"height":62.21567001967418,"x2":68.94862797023686,"y2":395.9400673674784,"width2":53.86475208853567,"height2":62.21567001967418},{"id":3,"x":117.45279557376531,"y":190.02707827254102,"width":53.22282715953401,"height":60.146081552364265,"x2":117.45279557376531,"y2":202.02707827254102,"width2":53.22282715953401,"height2":60.146081552364265},{"id":4,"x":287.59357010277967,"y":167.56555973012289,"width":41.68229753755175,"height":44.577877420908536,"x2":287.59357010277967,"y2":167.56555973012289,"width2":41.68229753755175,"height2":44.577877420908536},{"id":5,"x":118.76914833880426,"y":82.56212047405415,"width":53.29777543321499,"height":81.65259010043911,"x2":114.76914833880426,"y2":118.56212047405415,"width2":53.29777543321499,"height2":81.65259010043911},{"id":6,"x":537.4588713497235,"y":66.28740544645568,"width":122.26128872309005,"height":113.1848991043268,"x2":511.4588713497235,"y2":86.28741307585021,"width2":122.26128872309005,"height2":113.1848991043268},{"id":7,"x":113.33370167033755,"y":265.3141507500985,"width":92.84839378844077,"height":56.19711780292057,"x2":128.33370167033755,"y2":288.3141507500985,"width2":92.84839378844077,"height2":56.19711780292057},{"id":8,"x":621.3216668079388,"y":351.87412749097143,"width":91.89003304690286,"height":87.91644021808044,"x2":372.3216973255168,"y2":291.87412749097143,"width2":91.89003304690286,"height2":87.91644021808044},{"id":9,"x":417.5199375050393,"y":434.8589364975349,"width":78.84535199197134,"height":24.574238559307688,"x2":335.5199375050393,"y2":397.8589364975349,"width2":78.84535199197134,"height2":24.574238559307688}]
 
+        //data = [{"id":0,"x":397.325863714925,"y":289.3064471837431,"width":265.04077446866876,"height":157.42689021860065,"x2":397.325863714925,"y2":289.3064471837431,"width2":106.23724699872507,"height2":75.40303155579356},{"id":1,"x":771.990689877467,"y":185.81302606981112,"width":121.83063630676082,"height":37.1594970733531,"x2":619.990689877467,"y2":87.81301844041658,"width2":121.83063630676082,"height2":37.1594970733531},{"id":2,"x":109.94862797023686,"y":324.9400673674784,"width":53.86475208853567,"height":62.21567001967418,"x2":68.94862797023686,"y2":395.9400673674784,"width2":53.86475208853567,"height2":62.21567001967418},{"id":3,"x":117.45279557376531,"y":190.02707827254102,"width":53.22282715953401,"height":60.146081552364265,"x2":117.45279557376531,"y2":202.02707827254102,"width2":53.22282715953401,"height2":60.146081552364265},{"id":4,"x":287.59357010277967,"y":167.56555973012289,"width":41.68229753755175,"height":44.577877420908536,"x2":287.59357010277967,"y2":167.56555973012289,"width2":41.68229753755175,"height2":44.577877420908536},{"id":5,"x":118.76914833880426,"y":82.56212047405415,"width":53.29777543321499,"height":81.65259010043911,"x2":114.76914833880426,"y2":118.56212047405415,"width2":53.29777543321499,"height2":81.65259010043911},{"id":6,"x":537.4588713497235,"y":66.28740544645568,"width":122.26128872309005,"height":113.1848991043268,"x2":511.4588713497235,"y2":86.28741307585021,"width2":122.26128872309005,"height2":113.1848991043268},{"id":7,"x":113.33370167033755,"y":265.3141507500985,"width":92.84839378844077,"height":56.19711780292057,"x2":128.33370167033755,"y2":288.3141507500985,"width2":92.84839378844077,"height2":56.19711780292057},{"id":8,"x":621.3216668079388,"y":351.87412749097143,"width":91.89003304690286,"height":87.91644021808044,"x2":372.3216973255168,"y2":291.87412749097143,"width2":91.89003304690286,"height2":87.91644021808044},{"id":9,"x":417.5199375050393,"y":434.8589364975349,"width":78.84535199197134,"height":24.574238559307688,"x2":335.5199375050393,"y2":397.8589364975349,"width2":78.84535199197134,"height2":24.574238559307688}]
+        factory.render()
+    }
     render() {
     
 
@@ -318,7 +248,7 @@ class Factory {
                 .on("start", rectMoveStart)
                 .on("drag", rectMoving)
                 .on("end", (d) => {
-                    sayHi(d, 'newRects')
+                    snapLogic(d, 'newRects')
                 })
             )
 
@@ -342,9 +272,9 @@ class Factory {
             .append("g")
             .classed("circles", true)
             .each(function(d) {
-                let circleG = d3.select(this)
+                let handles = d3.select(this)
 
-                circleG
+                handles
                     .append("circle")
                     .classed("topleft", true)
                     .attr("r", HANDLE_R_INACTIVE)
@@ -360,13 +290,11 @@ class Factory {
                         .on("start end", rectResizeStartEnd)
                         .on("drag", rectResizing)
                         .on("end", (d) => {
-                        
-                            console.log( 'circleG ! caller=' )
-                            sayHi(d)
+                            snapLogic(d)
                         })
                     )
 
-                circleG
+                handles
                     .append("circle")
                     .classed("bottomright", true)
                     .attr("r", HANDLE_R_INACTIVE)
@@ -382,7 +310,7 @@ class Factory {
                         .on("start end", rectResizeStartEnd)
                         .on("drag", rectResizing)
                         .on("end", (d) => {
-                            sayHi(d, 'circle handle 298')
+                            snapLogic(d, 'circle handle 304')
                         })
                     )
             })
@@ -420,7 +348,7 @@ let chart = svg.append("g")
 let factory = new Factory(svg)
 factory.render()
 
-function sayHi(d, caller) {
+function snapLogic(d, caller) {
     // The handles are inner objects, so they don't have great access to 'this'
     // Therefore they reach out of the entire tower object graph into this function
     //
@@ -441,22 +369,39 @@ function sayHi(d, caller) {
     })
     let snapback = false
     let snapto = false
+    let snapTargets = []
+    const bX1 = box.x
+    const bY1 = box.y
+    const bX2 = box.x + box.width
+    const bY2 = box.y + box.height
+
     data.forEach((item) => {
         // need snapback because pacman?
-        if ( box.x < item.x && ( box.x + box.width ) > ( item.x + item.width )) {
-            if ( box.y < item.y && ( box.y + box.height ) > ( item.y + item.height )) {
+        // box > item
+    
+    
+        const iX1 = item.x
+        const iY1 = item.y
+        const iX2 = item.x + item.width
+        const iY2 = item.y + item.height
+    
+        // Box > Item? snapback! Pacman
+        if ( bX1 < iX1 && bX2 > iX2 ) {
+            if ( bY1 < iY1 && bY2 > iY2 ) {
                 snapback = true 
             }
         }
-        // need snapto because overlap?
-        if ( item.x <= box.x && box.x <= item.x + this.width &&
-                item.y <= box.y && box.y <= item.y + item.height ) {
+        // Box < Item? snapback! Pacman
+        if ( bX1 > iX1 && bX2 < iX2 ) {
+            if ( bY1 > iY1 && bY2 < iY2 ) {
+                snapback = true 
+            }
+        }
 
-                }
+        // Overlap 
+        if ( bX1 < iX1 && bX1 > iX2 ) {
 
-    
-
-
+        }
     })
 
     if ( snapback === true ) {
@@ -465,7 +410,14 @@ function sayHi(d, caller) {
         d.width = d.width2 
         d.height = d.height2 
         factory.render() 
+    } else if (snapto === true ) {
+        const box = data[snapTargets[0]]
+
+        factory.render()
+    } else {
+
     }
+
 }
 
 function rectMoving(d) {
