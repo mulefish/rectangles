@@ -1,54 +1,50 @@
-const WIDTH = 1001
-const HEIGHT = 702 
-const MAP_HEIGHT = HEIGHT + HEIGHT // twice!
-const MAP_WIDTH = WIDTH + WIDTH // twice
-const MAX_TRANSLATE_X = WIDTH
+const MAP_HEIGHT = 702 * 2
+const MAP_WIDTH = 1001 * 2 // MAP_HEIGHT * Math.sqrt(2)
+const MAX_TRANSLATE_X = MAP_WIDTH / 2
 const MIN_TRANSLATE_X = 0
-const MAX_TRANSLATE_Y = HEIGHT
+const MAX_TRANSLATE_Y = MAP_HEIGHT / 2
 const MIN_TRANSLATE_Y = 0
 const MIN_RECT_WIDTH = 100
 const MIN_RECT_HEIGHT = 20
 const HANDLE_R_INACTIVE = 6
 const HANDLE_R_ACTIVE = 12
-let data = [
-        {
-          "id": 0,
-          "x": 328.325863714925,
-          "y": 227.30644718374307,
-          "width": 106.23724699872507,
-          "height": 75.40303155579356
-        },
-        {
-          "id": 1,
-          "x": 619.990689877467,
-          "y": 87.81301844041658,
-          "width": 121.83063630676082,
-          "height": 37.1594970733531
-        },
-        {
-          "id": 2,
-          "x": 68.94862797023686,
-          "y": 395.9400673674784,
-          "width": 53.86475208853567,
-          "height": 62.21567001967418
-        },
-        {
-          "id": 3,
-          "x": 429.46618327338905,
-          "y": 8.006352657135043,
-          "width": 70.44597197287858,
-          "height": 52.026350775294624
-        },
-        {
-          "id": 4,
-          "x": 550.5441265621055,
-          "y": 160.19025129696217,
-          "width": 111.38693994736497,
-          "height": 105.76879925873662
-        }
-      ]
+let data = []
 /*
+let data = [{
+        id: 1,
+        x: 100 + (Math.random() * 300),
+        y: 100 + (Math.random() * 300),
+        width: 50 + (Math.random() * 100),
+        height: 50 + (Math.random() * 100)
+    },
+    {
+        id: 2,
+        x: 100 + (Math.random() * 300),
+        y: 100 + (Math.random() * 300),
+        width: 50 + (Math.random() * 100),
+        height: 50 + (Math.random() * 100)
+    },
+    {
+        id: 3,
+        x: 100 + (Math.random() * 300),
+        y: 100 + (Math.random() * 300),
+        width: 50 + (Math.random() * 100),
+        height: 50 + (Math.random() * 100)
+    }
+]
 */
+
+const height = 702
+const width = 1001
+const svg = d3.select("svg")
+const g = svg.append("g")
+g.append("rect")
+    .style("fill", "white")
+    .attr("x", MIN_TRANSLATE_X)
+    .attr("y", MIN_TRANSLATE_Y)
+    .attr("width", MAP_WIDTH)
+    .attr("height", MAP_HEIGHT)
+
 
 
 function resizerHover() {
@@ -163,24 +159,12 @@ function rectMoving(d) {
 /////// /////////// //////// 
 
 class Factory {
-    constructor() {
-    
-        // set the background - not _needed_ but Lockton will
-        // likely want to set 'current moneys'
-        chart.append("rect")
-        .style("fill", "red")
-        .attr("width", MAP_WIDTH)
-        .attr("y", HEIGHT - 300)
-        .attr("height", HEIGHT - 300)
-
-
-    }
 
     add() {
         data.push({
             id: data.length,
-            x: Math.random() * (WIDTH - 300),
-            y: Math.random() * (HEIGHT - 300),
+            x: Math.random() * (width - 300),
+            y: Math.random() * (height - 300),
             width: 40 + Math.random() * 100,
             height: 20 + Math.random() * 100
         })
@@ -196,15 +180,8 @@ class Factory {
     }
     
 
-
-    
-
-
     render() {
-
-
-        
-        let rects = chart
+        let rects = g
             .selectAll("g.rectangle")
             .data(data, function(d) {
                 return d
@@ -225,7 +202,7 @@ class Factory {
             .attr("stroke", "black")
             .attr("stroke-width", 2)
             .call(d3.drag()
-                .container(chart.node())
+                .container(g.node())
                 .on("start end", (d) => {
                     console.log('start end! ')
                 })
@@ -260,7 +237,7 @@ class Factory {
                     .attr("r", HANDLE_R_INACTIVE)
                     .on("mouseenter mouseleave", topHover)
                     .call(d3.drag()
-                        .container(chart.node())
+                        .container(g.node())
                         .subject(function() {
                             return {
                                 x: d3.event.x,
@@ -277,7 +254,7 @@ class Factory {
                     .attr("r", HANDLE_R_INACTIVE)
                     .on("mouseenter mouseleave", bottomHover)
                     .call(d3.drag()
-                        .container(chart.node())
+                        .container(g.node())
                         .subject(function() {
                             return {
                                 x: d3.event.x,
@@ -316,21 +293,5 @@ class Factory {
 
     }
 }
-
-/*
-
-const g = svg.append("g")
-g.append("rect")
-    .style("fill", "white")
-    .attr("x", MIN_TRANSLATE_X)
-    .attr("y", MIN_TRANSLATE_Y)
-    .attr("width", MAP_WIDTH)
-    .attr("height", MAP_HEIGHT)
-*/ 
-
-const svg = d3.select("svg")
-let chart = svg.append("g")
-
-let factory = new Factory(svg)
-
+let factory = new Factory()
 factory.render()
