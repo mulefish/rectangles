@@ -251,7 +251,7 @@ class Factory {
                 .on("start", rectMoveStart)
                 .on("drag", rectMoving)
                 .on("end", (d) => {
-                    snapLogic(d, 'newRects')
+                    sayHi(d, 'newRects')
                 })
             )
 
@@ -293,7 +293,8 @@ class Factory {
                         .on("start end", rectResizeStartEnd)
                         .on("drag", rectResizing)
                         .on("end", (d) => {
-                            snapLogic(d)
+                            sayHi(d, 'topleft')
+
                         })
                     )
 
@@ -313,7 +314,7 @@ class Factory {
                         .on("start end", rectResizeStartEnd)
                         .on("drag", rectResizing)
                         .on("end", (d) => {
-                            snapLogic(d, 'circle handle 304')
+                            sayHi(d, 'bottomright')
                         })
                     )
             })
@@ -346,6 +347,30 @@ class Factory {
     }
 }
 
+function rectMoving(d) {
+    // The handles are inner objects, so they don't have great access to 'this'
+    // Therefore they reach out of the entire tower object graph into this function
+    //
+    // QED: It is acting like a static method 
+
+    let dragX = Math.max(
+        Math.min(d3.event.x, MAX_TRANSLATE_X - d.width),
+        MIN_TRANSLATE_X
+    )
+
+    let dragY = Math.max(
+        Math.min(d3.event.y, MAX_TRANSLATE_Y - d.height),
+        MIN_TRANSLATE_Y
+    )
+
+    d.x = dragX
+    d.y = dragY
+
+    factory.render()
+}
+
+
+
 const svg = d3.select("svg")
 let chart = svg.append("g")
 let factory = new Factory(svg)
@@ -357,16 +382,68 @@ function isHigher(y1, y2) {
 function isLower(y1, y2) {
     return y1 > y2 
 }
+
+
+function sayHi(d, caller) {
+    // The handles are inner objects, so they don't have great access to 'this'
+    // Therefore they reach out of the entire tower object graph into this function
+    //
+    // QED: It is acting like a static method 
+    //
+    // step1: See if no pacman AND no overlap
+    // leave it where the human put it
+    // step2: See if it pacmans any other box 
+    // - snap back
+    // step3: See if it overlaps 
+    // - snap to nearest good spot
+        
+    let box = undefined
+    data.forEach((info, i) => {
+        if ( info.id === d.id) {
+            box = data[i]
+        }
+    })
+    let snapback = false
+    let snapto = false
+    data.forEach((item) => {
+        // need snapback because pacman?
+        if ( box.x < item.x && ( box.x + box.width ) > ( item.x + item.width )) {
+            if ( box.y < item.y && ( box.y + box.height ) > ( item.y + item.height )) {
+                snapback = true 
+            }
+        }
+        // need snapto because overlap?
+        if ( item.x <= box.x && box.x <= item.x + this.width &&
+            item.y <= box.y && box.y <= item.y + item.height ) {
+        }
+    })
+
+    if ( snapback === true ) {
+        d.x = d.x2
+        d.y = d.y2
+        d.width = d.width2 
+        d.height = d.height2 
+        factory.render() 
+    } else {
+        snapLogic(d, 'sayHi')
+    }
+}
+
+
+
+
+
 function snapLogic(d, caller) {
     const y1 = d.y
     const x1 = d.x
     const y2 = d.y + d.height
     const x2 = d.x + d.width
-    let n = false 
-    let s = false
-    let e = false
-    let w = false 
     data.forEach((box, i ) => {
+        let n = false 
+        let s = false
+        let e = false
+        let w = false 
+    
         if ( box.id !== d.id ) {
             const _y1 = box.y
             const _x1 = box.x
@@ -395,85 +472,14 @@ function snapLogic(d, caller) {
             }
 
             if ( w === true && n === true ) {
-                console.log( 'x ' + x1 + ' _x ' + _x1 )
+                console.log( 'x ' + x1 + ' _x ' + _x1 + ' !! ' + d.id + " and " +  box.id )
+                d.x = box.x + box.width
+                d.y = box.y
+                d.width = 100
+                d.height = 100
             }
-
-
         }
     })
-    console.log(' ... ')
-    factory.render()
-}
-
-class MyRect {
-    constructor(box) {
-        this.id = box.id
-        this.x = box.x
-        this.y = box.y
-        this.width= box.width
-        this.height = box.height
-        this.x2 = box.x + box.width
-        this.y2 = box.y + box.height
-    }
-
-    contains(x, y) {
-        return this.x <= x && x <= this.x + this.w &&
-            this.y <= y && y <= this.y + this.h
-    }
-}
-
-
-function overlapLogic(item) {
-    let tripped = false
-    let n = false
-    let s = false 
-    data.forEach((box) => { 
-        const b = new MyRect(box)
-        if ( item.id !== box.id ) {
-            // top line below other top line!
-            if ( item.y > box.y ) {
-                // top line above other below line!
-                if ( item.y < box.y2 ) {
-                    n = true
-                }
-            }
-
-            // bottom line below other top line!
-            if ( item.y + item.height > box.y ) {
-                // bottom line above other below line!
-                if ( item.y + item.height < box.y2 ) {
-                    s = true
-                    let delta = ( item.y + item.height ) - box.y2
-                    item.height -= delta
-                }
-            }
-
-
-        }
-    })
-    return tripped
-}
-
-
-function rectMoving(d) {
-    // The handles are inner objects, so they don't have great access to 'this'
-    // Therefore they reach out of the entire tower object graph into this function
-    //
-    // QED: It is acting like a static method 
-
-    let dragX = Math.max(
-        Math.min(d3.event.x, MAX_TRANSLATE_X - d.width),
-        MIN_TRANSLATE_X
-    )
-
-    let dragY = Math.max(
-        Math.min(d3.event.y, MAX_TRANSLATE_Y - d.height),
-        MIN_TRANSLATE_Y
-    )
-
-    d.x = dragX
-    d.y = dragY
-
     factory.render()
 }
 
