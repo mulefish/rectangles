@@ -371,10 +371,6 @@ function rectMoving(d) {
 
 
 
-const svg = d3.select("svg")
-let chart = svg.append("g")
-let factory = new Factory(svg)
-factory.render()
 
 function isHigher(y1, y2) {
     return y1 < y2 
@@ -452,22 +448,18 @@ function snapLogic(d, caller) {
             
             // RIGHT 
             if ( x1 > _x1 && x1 < _x2 ) {
-             //   console.log( ' RIGHT__ ' + d.id + ' x: ' + x1.toFixed(0) +' x2 ' + x2.toFixed(0) +  ' y ' + y1.toFixed(0) + ' y2 ' + y2.toFixed(0) + ' | _id ' + box.id + ' | x1 ' + _x1.toFixed(0) + ' x2 ' + _x2.toFixed(0) + ' y1' + _y1.toFixed(0) +  ' y2 ' + _y2.toFixed(0) )
                 w = true 
             } 
             // LEFT
             if ( x1 < _x1 && x2 < _x2 && x2 > x1  ) {
-            // console.log( ' LEFT__ ' + d.id + ' x: ' + x1.toFixed(0) +' x2 ' + x2.toFixed(0) +  ' y ' + y1.toFixed(0) + ' y2 ' + y2.toFixed(0) + ' | _id ' + box.id + ' | x1 ' + _x1.toFixed(0) + ' x2 ' + _x2.toFixed(0) + ' y1' + _y1.toFixed(0) +  ' y2 ' + _y2.toFixed(0) )
                 e = true 
             } 
             // ABOVE 
             if ( isHigher(y1,_y1) && isHigher(y2, _y2 ) && isLower(y2, _y1) && isHigher(y2, _y2)) {
-            // console.log( ' UP! ____ ' + d.id + ' x: ' + x1.toFixed(0) +' x2 ' + x2.toFixed(0) +  ' y ' + y1.toFixed(0) + ' y2 ' + y2.toFixed(0) + ' | _id ' + box.id + ' | x1 ' + _x1.toFixed(0) + ' x2 ' + _x2.toFixed(0) + ' y1' + _y1.toFixed(0) +  ' y2 ' + _y2.toFixed(0) )
                 n = true 
             } 
             // BELOW 
             if ( isLower(y1,_y1) && isHigher(y1, _y2 ) && isLower(y2, _y2))  {
-            // console.log( ' LOW! ____ ' + d.id + ' x: ' + x1.toFixed(0) +' x2 ' + x2.toFixed(0) +  ' y ' + y1.toFixed(0) + ' y2 ' + y2.toFixed(0) + ' | _id ' + box.id + ' | x1 ' + _x1.toFixed(0) + ' x2 ' + _x2.toFixed(0) + ' y1' + _y1.toFixed(0) +  ' y2 ' + _y2.toFixed(0) )
                 s = true 
             }
 
@@ -496,3 +488,8 @@ function snapLogic(d, caller) {
 }
 
 
+// /////////////////// 
+const svg = d3.select("svg")
+let chart = svg.append("g")
+let factory = new Factory(svg)
+factory.render()
