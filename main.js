@@ -403,15 +403,23 @@ function doBehavior(d, caller) {
     let snapto = false
     data.forEach((item) => {
         // need snapback because pacman?
-        if ( box.x < item.x && ( box.x + box.width ) > ( item.x + item.width )) {
-            if ( box.y < item.y && ( box.y + box.height ) > ( item.y + item.height )) {
-                snapback = true 
-            }
+        const y1 = box.y
+        const x1 = box.x
+        const y2 = box.y + box.height
+        const x2 = box.x + box.width
+        const _y1 = item.y
+        const _x1 = item.x
+        const _y2 = item.y + item.height
+        const _x2 = item.x + item.width
+
+        if ( isLower( y1, _y1) && isHigher( y2, _y2 ) && isLower( x1, _x1 ) && isHigher(x2, _x2 )) {
+            snapback = true
+        } else if ( isLower( _y1, y1) && isHigher( _y2, y2 ) && isLower( _x1, x1 ) && isHigher(_x2, x2 )) {
+            snapback = true
         }
-        // need snapto because overlap?
-        if ( item.x <= box.x && box.x <= item.x + this.width &&
-            item.y <= box.y && box.y <= item.y + item.height ) {
-        }
+
+
+
     })
 
     if ( snapback === true ) {
