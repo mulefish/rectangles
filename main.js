@@ -362,34 +362,47 @@ function snapLogic(d, caller) {
     const x1 = d.x
     const y2 = d.y + d.height
     const x2 = d.x + d.width
-
+    let n = false 
+    let s = false
+    let e = false
+    let w = false 
     data.forEach((box, i ) => {
         if ( box.id !== d.id ) {
             const _y1 = box.y
             const _x1 = box.x
             const _y2 = box.y + box.height
             const _x2 = box.x + box.width
-
+            
             // RIGHT 
             if ( x1 > _x1 && x1 < _x2 ) {
-            //    console.log( ' RIGHT__ ' + d.id + ' x: ' + x1.toFixed(0) +' x2 ' + x2.toFixed(0) +  ' y ' + y1.toFixed(0) + ' y2 ' + y2.toFixed(0) + ' | _id ' + box.id + ' | x1 ' + _x1.toFixed(0) + ' x2 ' + _x2.toFixed(0) + ' y1' + _y1.toFixed(0) +  ' y2 ' + _y2.toFixed(0) )
+             //   console.log( ' RIGHT__ ' + d.id + ' x: ' + x1.toFixed(0) +' x2 ' + x2.toFixed(0) +  ' y ' + y1.toFixed(0) + ' y2 ' + y2.toFixed(0) + ' | _id ' + box.id + ' | x1 ' + _x1.toFixed(0) + ' x2 ' + _x2.toFixed(0) + ' y1' + _y1.toFixed(0) +  ' y2 ' + _y2.toFixed(0) )
+                w = true 
             } 
             // LEFT
             if ( x1 < _x1 && x2 < _x2 && x2 > x1  ) {
-            //    console.log( ' LEFT__ ' + d.id + ' x: ' + x1.toFixed(0) +' x2 ' + x2.toFixed(0) +  ' y ' + y1.toFixed(0) + ' y2 ' + y2.toFixed(0) + ' | _id ' + box.id + ' | x1 ' + _x1.toFixed(0) + ' x2 ' + _x2.toFixed(0) + ' y1' + _y1.toFixed(0) +  ' y2 ' + _y2.toFixed(0) )
+            // console.log( ' LEFT__ ' + d.id + ' x: ' + x1.toFixed(0) +' x2 ' + x2.toFixed(0) +  ' y ' + y1.toFixed(0) + ' y2 ' + y2.toFixed(0) + ' | _id ' + box.id + ' | x1 ' + _x1.toFixed(0) + ' x2 ' + _x2.toFixed(0) + ' y1' + _y1.toFixed(0) +  ' y2 ' + _y2.toFixed(0) )
+                e = true 
             } 
             // ABOVE 
-            //if ( y1 < _y1 && y2 < _y2 ) {
             if ( isHigher(y1,_y1) && isHigher(y2, _y2 ) && isLower(y2, _y1) && isHigher(y2, _y2)) {
-                     console.log( ' UP! ____ ' + d.id + ' x: ' + x1.toFixed(0) +' x2 ' + x2.toFixed(0) +  ' y ' + y1.toFixed(0) + ' y2 ' + y2.toFixed(0) + ' | _id ' + box.id + ' | x1 ' + _x1.toFixed(0) + ' x2 ' + _x2.toFixed(0) + ' y1' + _y1.toFixed(0) +  ' y2 ' + _y2.toFixed(0) )
+            // console.log( ' UP! ____ ' + d.id + ' x: ' + x1.toFixed(0) +' x2 ' + x2.toFixed(0) +  ' y ' + y1.toFixed(0) + ' y2 ' + y2.toFixed(0) + ' | _id ' + box.id + ' | x1 ' + _x1.toFixed(0) + ' x2 ' + _x2.toFixed(0) + ' y1' + _y1.toFixed(0) +  ' y2 ' + _y2.toFixed(0) )
+                n = true 
             } 
             // BELOW 
             if ( isLower(y1,_y1) && isHigher(y1, _y2 ))  {
-                       console.log( ' LOW! ____ ' + d.id + ' x: ' + x1.toFixed(0) +' x2 ' + x2.toFixed(0) +  ' y ' + y1.toFixed(0) + ' y2 ' + y2.toFixed(0) + ' | _id ' + box.id + ' | x1 ' + _x1.toFixed(0) + ' x2 ' + _x2.toFixed(0) + ' y1' + _y1.toFixed(0) +  ' y2 ' + _y2.toFixed(0) )
+            // console.log( ' LOW! ____ ' + d.id + ' x: ' + x1.toFixed(0) +' x2 ' + x2.toFixed(0) +  ' y ' + y1.toFixed(0) + ' y2 ' + y2.toFixed(0) + ' | _id ' + box.id + ' | x1 ' + _x1.toFixed(0) + ' x2 ' + _x2.toFixed(0) + ' y1' + _y1.toFixed(0) +  ' y2 ' + _y2.toFixed(0) )
+                s = true 
             }
+
+            if ( w === true && n === true ) {
+                console.log( 'x ' + x1 + ' _x ' + _x1 )
+            }
+
+
         }
     })
     console.log(' ... ')
+    factory.render()
 }
 
 class MyRect {
