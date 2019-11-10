@@ -251,7 +251,7 @@ class Factory {
                 .on("start", rectMoveStart)
                 .on("drag", rectMoving)
                 .on("end", (d) => {
-                    sayHi(d, 'newRects')
+                    doBehavior(d, 'newRects')
                 })
             )
 
@@ -293,7 +293,7 @@ class Factory {
                         .on("start end", rectResizeStartEnd)
                         .on("drag", rectResizing)
                         .on("end", (d) => {
-                            sayHi(d, 'topleft')
+                            doBehavior(d, 'topleft')
 
                         })
                     )
@@ -314,7 +314,7 @@ class Factory {
                         .on("start end", rectResizeStartEnd)
                         .on("drag", rectResizing)
                         .on("end", (d) => {
-                            sayHi(d, 'bottomright')
+                            doBehavior(d, 'bottomright')
                         })
                     )
             })
@@ -384,7 +384,7 @@ function isLower(y1, y2) {
 }
 
 
-function sayHi(d, caller) {
+function doBehavior(d, caller) {
     // The handles are inner objects, so they don't have great access to 'this'
     // Therefore they reach out of the entire tower object graph into this function
     //
@@ -425,7 +425,7 @@ function sayHi(d, caller) {
         d.height = d.height2 
         factory.render() 
     } else {
-        snapLogic(d, 'sayHi')
+        snapLogic(d, 'doBehavior')
     }
 }
 
