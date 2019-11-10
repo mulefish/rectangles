@@ -466,22 +466,33 @@ function snapLogic(d, caller) {
                 n = true 
             } 
             // BELOW 
-            if ( isLower(y1,_y1) && isHigher(y1, _y2 ))  {
+            if ( isLower(y1,_y1) && isHigher(y1, _y2 ) && isLower(y2, _y2))  {
             // console.log( ' LOW! ____ ' + d.id + ' x: ' + x1.toFixed(0) +' x2 ' + x2.toFixed(0) +  ' y ' + y1.toFixed(0) + ' y2 ' + y2.toFixed(0) + ' | _id ' + box.id + ' | x1 ' + _x1.toFixed(0) + ' x2 ' + _x2.toFixed(0) + ' y1' + _y1.toFixed(0) +  ' y2 ' + _y2.toFixed(0) )
                 s = true 
             }
 
             if ( w === true && n === true ) {
-                console.log( 'x ' + x1 + ' _x ' + _x1 + ' !! ' + d.id + " and " +  box.id )
-                d.x = box.x + box.width
-                d.y = box.y
-                d.width = 100
-                d.height = 100
+                d.height = box.y - d.y
+            }
+            if ( w === true && s === true ) {
+                const num = box.y + box.height
+                const delta = d.y - num
+                d.y = num
+                d.height += delta
+            }
+            if ( e === true && n === true ) {
+                d.height = box.y - d.y
+            }
+
+            if ( e === true && s === true ) {
+                const num = box.y + box.height
+                const delta = d.y - num
+                d.y = num
+                d.height += delta
             }
         }
     })
     factory.render()
 }
-
 
 
