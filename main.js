@@ -91,6 +91,7 @@ function rectResizeStartEnd(d) {
     d.y2 = d.y
     d.width2 = d.width
     d.height2 = d.height
+    ACTIVE = d.id
 
 
     let el = d3.select(this),
@@ -156,6 +157,7 @@ function pretty(d) {
     return out
 
 }
+let ACTIVE = -1 
 
 function rectMoveStart(d) {
     //  Save off orig location data - later on this
@@ -163,6 +165,7 @@ function rectMoveStart(d) {
     d.y2 = d.y
     d.width2 = d.width
     d.height2 = d.height
+    ACTIVE = d.id
 }
 
 class Factory {
@@ -348,77 +351,96 @@ let chart = svg.append("g")
 let factory = new Factory(svg)
 factory.render()
 
+function isHigher(y1, y2) {
+    return y1 < y2 
+}
+function isLower(y1, y2) {
+    return y1 > y2 
+}
 function snapLogic(d, caller) {
-    // The handles are inner objects, so they don't have great access to 'this'
-    // Therefore they reach out of the entire tower object graph into this function
-    //
-    // QED: It is acting like a static method 
-    //
-    // step1: See if no pacman AND no overlap
-    // leave it where the human put it
-    // step2: See if it pacmans any other box 
-    // - snap back
-    // step3: See if it overlaps 
-    // - snap to nearest good spot
-        
-    let box = undefined
-    data.forEach((info, i) => {
-        if ( info.id === d.id) {
-            box = data[i]
-        }
-    })
-    let snapback = false
-    let snapto = false
-    let snapTargets = []
-    const bX1 = box.x
-    const bY1 = box.y
-    const bX2 = box.x + box.width
-    const bY2 = box.y + box.height
+    const y1 = d.y
+    const x1 = d.x
+    const y2 = d.y + d.height
+    const x2 = d.x + d.width
 
-    data.forEach((item) => {
-        // need snapback because pacman?
-        // box > item
-    
-    
-        const iX1 = item.x
-        const iY1 = item.y
-        const iX2 = item.x + item.width
-        const iY2 = item.y + item.height
-    
-        // Box > Item? snapback! Pacman
-        if ( bX1 < iX1 && bX2 > iX2 ) {
-            if ( bY1 < iY1 && bY2 > iY2 ) {
-                snapback = true 
+    data.forEach((box, i ) => {
+        if ( box.id !== d.id ) {
+            const _y1 = box.y
+            const _x1 = box.x
+            const _y2 = box.y + box.height
+            const _x2 = box.x + box.width
+
+            // RIGHT 
+            if ( x1 > _x1 && x1 < _x2 ) {
+            //    console.log( ' RIGHT__ ' + d.id + ' x: ' + x1.toFixed(0) +' x2 ' + x2.toFixed(0) +  ' y ' + y1.toFixed(0) + ' y2 ' + y2.toFixed(0) + ' | _id ' + box.id + ' | x1 ' + _x1.toFixed(0) + ' x2 ' + _x2.toFixed(0) + ' y1' + _y1.toFixed(0) +  ' y2 ' + _y2.toFixed(0) )
+            } 
+            // LEFT
+            if ( x1 < _x1 && x2 < _x2 && x2 > x1  ) {
+            //    console.log( ' LEFT__ ' + d.id + ' x: ' + x1.toFixed(0) +' x2 ' + x2.toFixed(0) +  ' y ' + y1.toFixed(0) + ' y2 ' + y2.toFixed(0) + ' | _id ' + box.id + ' | x1 ' + _x1.toFixed(0) + ' x2 ' + _x2.toFixed(0) + ' y1' + _y1.toFixed(0) +  ' y2 ' + _y2.toFixed(0) )
+            } 
+            // ABOVE 
+            //if ( y1 < _y1 && y2 < _y2 ) {
+            if ( isHigher(y1,_y1) && isHigher(y2, _y2 ) && isLower(y2, _y1) && isHigher(y2, _y2)) {
+                     console.log( ' UP! ____ ' + d.id + ' x: ' + x1.toFixed(0) +' x2 ' + x2.toFixed(0) +  ' y ' + y1.toFixed(0) + ' y2 ' + y2.toFixed(0) + ' | _id ' + box.id + ' | x1 ' + _x1.toFixed(0) + ' x2 ' + _x2.toFixed(0) + ' y1' + _y1.toFixed(0) +  ' y2 ' + _y2.toFixed(0) )
+            } 
+            // BELOW 
+            if ( isLower(y1,_y1) && isHigher(y1, _y2 ))  {
+                       console.log( ' LOW! ____ ' + d.id + ' x: ' + x1.toFixed(0) +' x2 ' + x2.toFixed(0) +  ' y ' + y1.toFixed(0) + ' y2 ' + y2.toFixed(0) + ' | _id ' + box.id + ' | x1 ' + _x1.toFixed(0) + ' x2 ' + _x2.toFixed(0) + ' y1' + _y1.toFixed(0) +  ' y2 ' + _y2.toFixed(0) )
             }
         }
-        // Box < Item? snapback! Pacman
-        if ( bX1 > iX1 && bX2 < iX2 ) {
-            if ( bY1 > iY1 && bY2 < iY2 ) {
-                snapback = true 
-            }
-        }
-
-        // Overlap 
-        if ( bX1 < iX1 && bX1 > iX2 ) {
-
-        }
     })
+    console.log(' ... ')
+}
 
-    if ( snapback === true ) {
-        d.x = d.x2
-        d.y = d.y2
-        d.width = d.width2 
-        d.height = d.height2 
-        factory.render() 
-    } else if (snapto === true ) {
-        const box = data[snapTargets[0]]
-
-        factory.render()
-    } else {
-
+class MyRect {
+    constructor(box) {
+        this.id = box.id
+        this.x = box.x
+        this.y = box.y
+        this.width= box.width
+        this.height = box.height
+        this.x2 = box.x + box.width
+        this.y2 = box.y + box.height
     }
 
+    contains(x, y) {
+        return this.x <= x && x <= this.x + this.w &&
+            this.y <= y && y <= this.y + this.h
+    }
 }
+
+
+function overlapLogic(item) {
+    let tripped = false
+    let n = false
+    let s = false 
+    data.forEach((box) => { 
+        const b = new MyRect(box)
+        if ( item.id !== box.id ) {
+            // top line below other top line!
+            if ( item.y > box.y ) {
+                // top line above other below line!
+                if ( item.y < box.y2 ) {
+                    n = true
+                }
+            }
+
+            // bottom line below other top line!
+            if ( item.y + item.height > box.y ) {
+                // bottom line above other below line!
+                if ( item.y + item.height < box.y2 ) {
+                    s = true
+                    let delta = ( item.y + item.height ) - box.y2
+                    item.height -= delta
+                }
+            }
+
+
+        }
+    })
+    return tripped
+}
+
 
 function rectMoving(d) {
     // The handles are inner objects, so they don't have great access to 'this'
