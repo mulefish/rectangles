@@ -448,22 +448,27 @@ function snapLogic(d, caller) {
             
             // RIGHT 
             if ( x1 > _x1 && x1 < _x2 ) {
+                console.log('RIGHT')
                 w = true 
             } 
             // LEFT
-            if ( x1 < _x1 && x2 < _x2 && x2 > x1  ) {
+            if ( x1 < _x1 && x2 < _x2 && x2 > _x1  ) {
+                console.log('LEFT')
                 e = true 
             } 
             // ABOVE 
             if ( isHigher(y1,_y1) && isHigher(y2, _y2 ) && isLower(y2, _y1) && isHigher(y2, _y2)) {
+                console.log('ABOVE')
                 n = true 
             } 
             // BELOW 
             if ( isLower(y1,_y1) && isHigher(y1, _y2 ) && isLower(y2, _y2))  {
+                console.log('BELOW')
                 s = true 
             }
 
             if ( w === true && n === true ) {
+
                 d.height = box.y - d.y
             }
             if ( w === true && s === true ) {
