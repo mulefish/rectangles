@@ -11,8 +11,9 @@ For me, "python3 -m http.server 8080" is nice easy tmp webserver. But any webser
 4a: Snapback when a box completely envelopes another box ( set a box's X,Y,WIDTH and HEIGHT back to orig values ) \
 4b: Snapback when a box is completely enveloped another box ( set a box's X,Y,WIDTH and HEIGHT back to orig values ) \
 5: Snapto: When a box overlaps w/ another this is a attempt to 'snapto' an apropo location. \
-Example: \
-          STEP1 before snapto: 
+Example: 
+
+          STEP1 before snapto: \
             ----------------
             * a            *
             *              *
