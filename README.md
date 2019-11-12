@@ -1,7 +1,7 @@
 # rectangles\
 
 # Running?\
-This does not have any bad-end; You would need to supply a runner webserver. \
+This does not have any back-end; You would need to supply a runner webserver. \
 For me, "python3 -m http.server 8080" is nice easy tmp webserver. But any webserver would do. \
 \
 #Good?\
